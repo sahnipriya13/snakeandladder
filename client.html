@@ -1,0 +1,604 @@
+<html>
+	<head>
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+			<script src="/socket.io/socket.io.js"></script>
+			<script type="text/javascript"></script>
+			<style type="text/css">
+table.gradienttable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #999999;
+	border-collapse: collapse;
+}
+table.gradienttable th {
+	padding: 0px;
+	background: #d5e3e4;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Q1ZTNlNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjQwJSIgc3RvcC1jb2xvcj0iI2NjZGVlMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiM2M4Y2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #d5e3e4 0%, #ccdee0 40%, #b3c8cc 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d5e3e4), color-stop(40%,#ccdee0), color-stop(100%,#b3c8cc));
+	background: -webkit-linear-gradient(top,  #d5e3e4 0%,#ccdee0 40%,#b3c8cc 100%);
+	background: -o-linear-gradient(top,  #d5e3e4 0%,#ccdee0 40%,#b3c8cc 100%);
+	background: -ms-linear-gradient(top,  #d5e3e4 0%,#ccdee0 40%,#b3c8cc 100%);
+	background: linear-gradient(to bottom,  #d5e3e4 0%,#ccdee0 40%,#b3c8cc 100%);
+	border: 1px solid #999999;
+}
+table.gradienttable td {
+	padding: 0px;
+	background: #ebecda;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ViZWNkYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjQwJSIgc3RvcC1jb2xvcj0iI2UwZTBjNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjZWNlYjciIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #ebecda 0%, #e0e0c6 40%, #ceceb7 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ebecda), color-stop(40%,#e0e0c6), color-stop(100%,#ceceb7));
+	background: -webkit-linear-gradient(top,  #ebecda 0%,#e0e0c6 40%,#ceceb7 100%);
+	background: -o-linear-gradient(top,  #ebecda 0%,#e0e0c6 40%,#ceceb7 100%);
+	background: -ms-linear-gradient(top,  #ebecda 0%,#e0e0c6 40%,#ceceb7 100%);
+	background: linear-gradient(to bottom,  #ebecda 0%,#e0e0c6 40%,#ceceb7 100%);
+	border: 1px solid #999999;
+}
+table.gradienttable th p{
+	margin:0px;
+	padding:8px;
+	border-top: 1px solid #eefafc;
+	border-bottom:0px;
+	border-left: 1px solid #eefafc;
+	border-right:0px;
+}
+table.gradienttable td p{
+	margin:0px;
+	padding:8px;
+	border-top: 1px solid #fcfdec;
+	border-bottom:0px;
+	border-left: 1px solid #fcfdec;;
+	border-right:0px;
+}
+</style>
+			<style type="text/css"> 
+.x { width: 130px; height: 30px; } 
+</style> 
+			<style type="text/css"> 
+.inputtext { width: 244px; height: 30px; } 
+</style> 
+			<style type="text/css"> 
+.inputtext1 { width: 240px; height: 32px; } 
+</style> 
+			<style>
+.A{
+padding:0;margin:0;background-size:100%;
+}
+		
+			* {
+ font-family: Arial;
+}
+			.myButton{
+    background:url('images/createroom.png') no-repeat;
+    cursor:pointer;
+    border:none;
+    width:200px;
+    height:48px;
+}
+
+
+.myButton:active  /* use Dot here */
+{   
+    background:url('images/createroom.png') no-repeat;
+}
+#enteruser
+{
+    background:url('images/ok1.png') no-repeat;
+	margin-top: 0%;
+	height:45px; width:82px;
+}
+#playBtn
+{
+    background:url('images/play.png') no-repeat;
+	top:70px;
+	height:50px; width:210px;
+}
+#rollDiceBtn
+{
+    background:url('images/RollDice.png') no-repeat;
+	height:60px; width:265px;
+}
+#canvasDiv
+{
+    background:url('images/simplebackground.png') no-repeat;
+	width:100%; height:100%;
+	background-size: 100%;
+}
+			</style>
+	</head>
+	<body background="images/back.png"  class="A" style="height:600px; width:100%;">
+		<button id='create' onclick='createRoom()' style="display:none;" class="myButton" ></button>
+	<!--<center>	<img  src="images/snakesandladders.png" width=" 400px"  height="100px" ></center>-->
+		<div id="room_link"></div>
+		<div id='p_info' style='display:none;'>
+		<font color='#68000' size='5'><b>Player Name</font> <input type='text' id='userName' class='inputtext'/>
+			<select name="myColor" id="dropDown" class='x'>
+				  <option value="blank" disabled="disabled" selected="selected">select a Color</option>
+				  <option value="red">Red</option>
+				  <option value="blue">Blue</option>
+				  <option value="Green">green</option>
+				  <option value="Yellow">yellow</option>
+				  <option value="pink">Pink</option>
+				  <option value="Purple">Purple</option>
+			</select>
+			
+			<button id="enteruser" style="float:right;"></button>
+			<input type='text' id='textid21' style="float:right;position:relative;top:3;right:50;z-index: 2;" class='inputtext1'/>
+			<div id="1a" style="float:right;position:relative;top:3;right:60;z-index: 2;">
+		<font size='5' color='#68000'>Room Link:</font></div>	<br><br><br>
+		<table border="2" style="color:black" width="130" height="70" class="gradienttable" id="List" >
+		</table>
+		</div>
+		<div id="msg_user"></div>
+		<div id="msg_user1" style="position:fixed;top:100;left:60"></div>
+		<div id="msg_user2"></div>
+		<div id='canvasDiv' style='display:none;width:1346px;height:690px;'>
+		
+		<button id='rollDiceBtn' style='display:none;position:fixed;top:100;left:50;' value='rollDiceBtn'></button>
+			<div id="msg_userx"></div>
+			<center><canvas id='board' width='500px' height='500px' style="border:1px solid #000;margin-top:5%;">
+		<center>	<img src='images/snakeLadder.jpg' width='500px' height='500px'></center>
+			</canvas></center>
+			
+			<div id="x" style="position:absolute; float:left; left:35px; bottom:25px; z-index:2;" >
+			<font size="6" style="position:fixed;bottom:140;left:100;" ><b>PLAYERS</b></font>
+			<table border="2" style="color:black" width="300" height="100" class="gradienttable" id="PlayerList" >
+		</table>
+		</div>
+			<div id="msg_user3" style="position: fixed;top: 180;left: 100;"></div>
+			<div id='dice' style='width:353px;height:100px;float:right;'></div>
+		</div>
+		<button id='playBtn' style='display:none;' onclick='play()'></button>
+		
+		
+		<script>
+		var player = new Array(), playerInfo = new Array(), room, userName, color, canvas, context, playerid, bonus, playerslist='<tr><th>NAME</th><th>COLOR</th><th>POSITION</th><th>ALIVE</th></tr>', i=1, PlayerListarray = new Array();
+		var list='<tr><th>COLORS ALREADY SELECTED</th></tr>';
+		/*---
+		------ Onload
+		---*/		
+		var socketio = io.connect("http://snasnakesandladders.nodejitsu.com");
+			$(document).ready(function() {
+				if(window.location.hash)
+				{
+				    // test();
+					x=location.href;
+					 document.getElementById('textid21').value= x;		
+					socketio.emit('colors1');
+					jQuery('#p_info').css('display','block');
+					color = jQuery("#dropDown").val();
+					
+                   //jQuery('#dropDown').css('display','block');
+                }					
+				else
+				{
+				jQuery('#msg_user2').css('display','none');
+					jQuery('#create').css('display','block');
+				}
+				jQuery("#enteruser").click(function()
+				{
+					userName = jQuery('#userName').val();
+					color = jQuery("#dropDown").val();
+					room = window.location.hash.substr(1);
+					socketio.emit("incomingPlayer",{usernamev:userName,roomv:room, colorv:color});	
+					
+					//socketio.emit("remove",color);
+					jQuery('#p_info').css('display','none');
+					jQuery('#msg_user1').css('display','none');
+						
+				});
+				jQuery("#rollDiceBtn").click(function()
+				{
+					dice = Math.floor(Math.random() * 6) + 1;
+					socketio.emit('diceSelect',{diceVal:dice,r:room,player:player});
+				});
+			
+				
+			});
+			
+			/*--
+			------ Create Room 
+			----*/	
+var x=new Array();			
+socketio.on("remove1",function(colors)
+{
+var i;
+var select = document.getElementById("dropDown");
+var j=0;
+			jQuery("#List").empty();
+			list='<tr><th>COLORS ALREADY SELECTED</th></tr>';
+$.each(colors, function(key, value) {
+for (i=0;i<select.length;i++) {
+   if (select.options[i].value==value) {
+       document.getElementById("dropDown").options[i].disabled=true;
+	   				var td_row1= "<tr><td>"+select.options[i].value+"</td></tr>";
+				list=list+td_row1;
+				jQuery("#List").html(list);
+	   x[j]=select.options[i].value;
+		j=j+1;
+		}
+		}
+		});
+		list='';
+});		
+			function createRoom()
+			{
+				socketio.emit('getUrl');
+			}
+			function gotoRoom(url_val)
+		{
+		
+		document.location.href = url_val;
+		location.reload();	
+        //document.getElementById('textid21').value= url_val;		
+		}
+			socketio.on('sendRoom',function(data)
+			{
+			//alert(document.getElementById('textid21').value);
+				var url_val = data['url_val'];
+				$('#create').css('display', 'none');
+				gotoRoom(url_val);
+				
+			});
+			/*---
+			----- Player Event
+			---*/
+			socketio.on('PlayEvent',function(data)
+			{				
+				jQuery('#room_link').css('display','none');
+				jQuery('#msg_user2').css('display','none');
+				var count = data['no_players'] +1;
+				var msg = '';
+				if(data['no_players'] == 0)
+				{
+					msg = "<b><font size='5'>Waiting for the other players to enter.</font></b>";	
+				}
+				else if(data['no_players'] < 3)
+				{
+					msg = "<b><font size='5'>You can start the game with no of players: "+count+"</font></b>";
+					jQuery('#playBtn').css('display','block');
+				}
+				else
+				{
+					msg = "<b><font size='5'>All Players have entered.Lets start the game</font></b>";
+					jQuery('#playBtn').css('display','block');
+				}
+				jQuery("#msg_user").html(msg);
+			});
+			socketio.on('message',function()
+			{				
+			var msg;
+			msg="<b><font size='5'>Wait for admin to start the game</font></b>";
+			jQuery("#msg_user").html(msg);
+			jQuery('#msg_user2').css('display','none');
+			});
+			
+			
+			/*---
+			---- current user id
+			---*/
+			socketio.on('youAre',function(data)
+			{
+				player['id'] = data['id'];
+				playerid = data['id'];
+			});
+			/*---
+			---- Current Player Value
+			---*/
+			socketio.on('PlayerValue',function(data)
+			{
+				id = data['id'];
+				playerInfo[id] = new Array();
+				playerInfo[id]['name'] = data['un'];
+				playerInfo[id]['color'] = data['col'];
+				playerInfo[id]['position'] = data['pos'];
+				playerInfo[id]['alive'] = data['alive'];
+			});
+			/*---
+			---- All Player List
+			---*/
+			socketio.on('PlayerList',function(data)
+			{
+				id = data['id'];
+				var pl_username 	= data['un'];
+				var pl_usercolor 	= data['col'];
+				var pl_position 	= data['pos'];
+				var pl_alive 		= data['alive'];
+				if(PlayerListarray[id]==undefined)
+					PlayerListarray[id] = new Array();
+				else 
+				{
+					PlayerListarray[id]['color'] = pl_usercolor;
+					PlayerListarray[id]['position'] = pl_position;					
+				}
+				var td_row			= "<tr><td>"+pl_username+"</td><td>"+pl_usercolor+"</td><td>"+pl_position+"</td><td>"+pl_alive+"</td></tr>";
+				playerslist=playerslist+td_row;
+				
+				if((data['total_Players']-1)==data['i'])
+				{
+					jQuery("#PlayerList").html(playerslist);
+					playerslist='<tr><th>NAME</th><th>COLOR</th><th>POSITION</th><th>ALIVE</th></tr>';					
+					//context.clearRect(0,0,500,500);	
+					drawBoard();
+					setTimeout(function(){draw_player()},2000)
+					if(data['nextmove']==true)
+						socketio.emit("nextmove",{room:room});
+				}				
+			});	
+			function draw_player()
+			{
+				for (var key in PlayerListarray) {
+						drawPlayer(PlayerListarray[key]['position'],PlayerListarray[key]['color']);
+					}
+			}
+			
+			/*---
+			---- Play function
+			---*/
+			function play()
+			{
+				socketio.emit("gameStart" ,{r:room});
+				jQuery("#playBtn").css('display','none');
+				jQuery('#msg_user').css('display','none');
+				jQuery('#msg_user1').css('display','none');
+					jQuery('#msg_user2').css('display','block');
+			}
+			/*---
+			----- Game Started
+			---*/
+			socketio.on('gameStarted',function(data)
+			{
+			jQuery('#msg_user').css('display','none');
+				jQuery('#msg_user1').css('display','none');
+					jQuery('#msg_user2').css('display','none');		
+					jQuery('#playBtn').css('display','none');		
+					canvas = document.getElementById("board");
+					context = canvas.getContext("2d");
+					jQuery('#canvasDiv').css('display','block');
+					gameloop();
+			});
+			/*---
+			----- Game Loop function 
+			---*/
+			var xz = 1;
+			function gameloop()
+			{
+				//context.clearRect(0,0,500,500);
+				//canvas.width=canvas.width;
+				
+				drawBoard();
+			}
+			/*---
+			------ Draw Board
+			---*/
+			function drawBoard()
+			{
+			//context.clearRect(0,0,500,500);	
+				console.log("------draw board---------");
+				//canvas.width=canvas.width;
+				var imageObj = new Image();
+				var img_h = canvas.height;
+				var img_w = canvas.width;				
+				imageObj.onload = function() 
+				{
+					context.drawImage(imageObj, 0,0,img_h, img_w);
+				};
+				imageObj.src = 'images/snakeLadder.jpg';
+				return true;
+			}
+			/*---
+			----- Your Move
+			---*/
+			socketio.on('messagex',function()
+			{
+			jQuery('#msg_user1').css('display','block');
+             msg="<font size='5'>Admin will roll the dice first</font>";
+					jQuery('#msg_user1').html(msg);
+			});
+			socketio.on('yourMove',function(data)
+			{
+				jQuery('#rollDiceBtn').css('display','none');
+				if(data['sd'] == true)
+				{
+				  $('#msg_user1').empty();
+					jQuery('#rollDiceBtn').css('display','block');
+				}			
+              else
+{
+jQuery('#msg_user1').css('display','block');
+jQuery('#msg_user1').empty();
+             msg="<font size='5'>OTHER PLAYER's TURN</font>";
+					jQuery('#msg_user1').html(msg);
+}			  
+			});
+			/*---
+			----- Game End
+			---*/
+			socketio.on('GameEnd',function(data)
+			{
+				jQuery('#canvasDiv').css('display','none');
+				jQuery('#msg_user').css('display','block');				
+				jQuery('#PlayerList').css('display','none');				
+				jQuery('#dice').css('display','none');				
+				jQuery('#msg_user').html(data['name']+" win this game");								
+			});
+			
+			/*---
+			----- Game Over
+			---*/
+			socketio.on('GameOver',function(data)
+			{
+				jQuery('#canvasDiv').css('display','none');
+				jQuery('#msg_user').css('display','block');				
+				jQuery('#PlayerList').css('display','none');				
+				jQuery('#dice').css('display','none');	
+				jQuery('#msg_user1').css('display','none');
+				jQuery('#msg_user2').css('display','none');				
+                msg="<b><font size='7'>Game Over</font></b>";		
+				jQuery('#msg_user').html(msg);				
+			});
+			
+			/*---
+			------ Dice selected
+			---*/
+			socketio.on('diceSelected',function(data)
+			{								
+				if(data["turn"]==playerid)
+				{				
+					dice = data['message']['diceVal'];
+					rollDice();				
+				}
+			});
+			/*---
+			------ Dice selected
+			---*/
+			socketio.on('DrawBoard',function(data)
+			{	
+				console.log("drawboard");
+				gameloop();
+			});
+			socketio.on('dicey',function(dice)
+			{
+			jQuery('#msg_user3').css('display','block');
+               jQuery('#msg_user3').empty();
+             msg="<font size='5'>DICE MOVES</font>";
+					jQuery('#msg_user3').html(msg);
+			switch(dice)
+				 {
+					case 1:
+						dice_img = '<img src="images/1.png" style="position:absolute; float:left; left:140px; top:235px; z-index:2;" />';	
+						break;
+					case 2:
+						dice_img= '<img src="images/2.jpg"  style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';
+						break;
+					case 3:
+						dice_img= '<img src="images/3.png" style="position:absolute; float:left; left:140px; top:235px; z-index:2;" />';
+						break;
+					case 4:
+						dice_img= '<img src="images/4.jpg" style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';	
+						break;
+					case 5:
+						dice_img= '<img src="images/5.png"  style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';	
+						break;
+					case 6:
+						dice_img= '<img src="images/6.png"  style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';	
+						break;
+				 }
+				jQuery("#dice").html(dice_img);
+			});
+			
+			/*---
+			------ Roll Dice function
+			---*/
+			function rollDice()
+			{	
+				
+				var dice_img;
+				jQuery('#msg_user3').css('display','block');
+               jQuery('#msg_user3').empty();
+             msg="<font size='5'>DICE MOVES</font>";
+					jQuery('#msg_user3').html(msg);
+				switch(dice)
+				 {
+					case 1:
+						dice_img = '<img src="images/1.png" style="position:absolute; float:left; left:140px; top:235px; z-index:2;" />';	
+						break;
+					case 2:
+						dice_img= '<img src="images/2.jpg"  style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';
+						break;
+					case 3:
+						dice_img= '<img src="images/3.png" style="position:absolute; float:left; left:140px; top:235px; z-index:2;" />';
+						break;
+					case 4:
+						dice_img= '<img src="images/4.jpg" style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';	
+						break;
+					case 5:
+						dice_img= '<img src="images/5.png"  style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';	
+						break;
+					case 6:
+						dice_img= '<img src="images/6.png"  style="position:absolute; float:left; left:140px; top:235px; z-index:2;"/>';	
+						break;
+				 }
+				jQuery("#dice").html(dice_img);
+				socketio.emit('dicex',dice);
+				if(dice == 6)
+				{
+				jQuery('#msg_user1').html('');
+					if(playerInfo[playerid]['alive'] == false)
+					{
+						playerInfo[playerid]['alive'] = true;
+						if(dice == 6)
+						{
+							bonus = 1;
+						}								
+					}
+					else
+					{
+						if(dice == 6)
+						{
+							bonus = bonus + 6;
+						}	
+					}
+				}
+				else
+				{
+				
+					dice = dice + bonus;					
+					if(playerInfo[playerid]['alive'] == true)
+					{
+					
+						socketio.emit('updateMoveServer',{room:room,player:playerid,dice_val:dice,alive:playerInfo[playerid]['alive']});
+					}					
+					else socketio.emit('updateMoveServer',{room:room,player:playerid,dice_val:0,alive:false});
+					jQuery("#rollDiceBtn").css('display','none');
+					
+					bonus = 0;					
+				}
+				dice  =0;
+				return false;
+			}
+			function drawPlayer(pos , col)
+			{
+			canvas = document.getElementById("board");
+					context = canvas.getContext("2d");
+				console.log("------draw player---------");
+				var n = pos;
+				row = 9-Math.floor((n-1)/10)+1;
+				if(row % 2 == 0)
+				{
+				if(n%10==0)
+				{
+					column = (n % 10)+10;
+					}
+					else
+					{
+					column=n%10;
+					}
+				}
+				else
+				{
+				if((n%10==0))
+				{
+					column = 11- (n % 10)-10;
+					}else
+					{
+					column = 11- (n % 10);
+					}
+					
+				}				  
+				centerx = (column*50)-25;
+				centery = (row*50)-25;
+				context.beginPath();
+				context.arc(centerx, centery, 10, 0, 2 * Math.PI, false);
+				context.fillStyle = col;
+				context.fill();
+				context.strokeStyle = '#003300';
+				context.stroke();
+				//setTimeout("drawPlayer("+n+" ,'"+col+"')",30);				
+			}
+		</script>
+	</body>
+</html>
+</html>
